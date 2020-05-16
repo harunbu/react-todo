@@ -9,7 +9,29 @@ import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 import { MenuBar } from './components/MenuBar.jsx'
 import { Toolbar } from '@material-ui/core';
-import { spacing } from '@material-ui/system';
+
+// Firebase App (the core Firebase SDK) is always required and must be listed first
+import * as firebase from "firebase/app";
+
+// Add the Firebase products that you want to use
+import "firebase/auth";
+import "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCH10tVePTIfywA_EdwiZnyJEM3gWaP8D8",
+  authDomain: "harunbu-dev.firebaseapp.com",
+  databaseURL: "https://harunbu-dev.firebaseio.com",
+  projectId: "harunbu-dev",
+  storageBucket: "harunbu-dev.appspot.com",
+  messagingSenderId: "567756684294",
+  appId: "1:567756684294:web:0c6f298e05203f33755787",
+  measurementId: "G-1S4ENHLTEX"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+var provider = new firebase.auth.GoogleAuthProvider();
 
 class InputForm extends React.Component {
   constructor(props) {
@@ -49,7 +71,7 @@ class InputForm extends React.Component {
 function TodoList(props) {
   const todoList = props.todoList.map((todo, index) => {
     return (
-      <Box mb={1}>
+      <Box mb={1} key={index}>
         <Card elevation={3}>
           <CardContent>
             {todo}
@@ -63,6 +85,35 @@ function TodoList(props) {
       {todoList}
     </React.Fragment>
   );
+}
+
+class LoginButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLogin: false,
+    };
+  }
+  login() {
+    firebase.auth().signInWithRedirect(provider);
+  }
+  componentDidMount () {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({
+          isLogin: true,
+        });
+      }
+    });
+  }
+  render() {
+    return (
+      <React.Fragment>
+        <Button onClick={this.login}>ログイン</Button>
+        {this.state.isLogin ? 'ログイン中！' : '未ログイン'}
+      </React.Fragment>
+    );
+  }
 }
 
 class App extends React.Component {
@@ -94,6 +145,7 @@ class App extends React.Component {
           </Box>
           <TodoList todoList={this.state.todoList} />
         </Container>
+        <LoginButton />
       </React.Fragment>
     );
   }
