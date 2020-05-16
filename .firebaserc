@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "harunbu-dev"
+  },
+  "targets": {
+    "harunbu-dev": {
+      "hosting": {
+        "todo": [
+          "harunbu-dev-react-todo"
+        ]
+      }
+    }
+  }
+}
