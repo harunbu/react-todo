@@ -91,28 +91,44 @@ class LoginButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: true,
       isLogin: false,
     };
+    this.logout = this.logout.bind(this);
+  }
+  logout() {
+    firebase.auth().signOut();
+    this.setState({
+      isLoading: true,
+    });
   }
   login() {
     firebase.auth().signInWithRedirect(provider);
   }
   componentDidMount () {
     firebase.auth().onAuthStateChanged(user => {
+      this.setState({
+        isLoading: false,
+      });
       if (user) {
         this.setState({
           isLogin: true,
+        });
+      } else {
+        this.setState({
+          isLogin: false,
         });
       }
     });
   }
   render() {
-    return (
-      <React.Fragment>
-        <Button onClick={this.login}>ログイン</Button>
-        {this.state.isLogin ? 'ログイン中！' : '未ログイン'}
-      </React.Fragment>
-    );
+    if (this.state.isLoading) {
+      return <Box>ログイン状態確認中...</Box>;
+    }
+    if (this.state.isLogin){
+      return <Button variant="contained" onClick={this.logout}>ログアウト</Button>;
+    }
+    return <Button variant="contained" onClick={this.login}>ログイン</Button>;
   }
 }
 
