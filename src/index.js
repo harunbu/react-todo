@@ -9,6 +9,7 @@ import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 import { MenuBar } from './components/MenuBar.jsx'
 import { Toolbar } from '@material-ui/core';
+import { spacing } from '@material-ui/system';
 
 class InputForm extends React.Component {
   constructor(props) {
@@ -45,6 +46,25 @@ class InputForm extends React.Component {
   }
 }
 
+function TodoList(props) {
+  const todoList = props.todoList.map((todo, index) => {
+    return (
+      <Box mb={1}>
+        <Card elevation={3}>
+          <CardContent>
+            {todo}
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  });
+  return (
+    <React.Fragment>
+      {todoList}
+    </React.Fragment>
+  );
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -60,9 +80,6 @@ class App extends React.Component {
     });
   }
   render() {
-    const todoList = this.state.todoList.map((todo, index) => {
-      return <li key={index}>{todo}</li>;
-    });
     return (
       <React.Fragment>
         <CssBaseline />
@@ -72,12 +89,10 @@ class App extends React.Component {
 
         {/* ToDoList */}
         <Container maxWidth="sm">
-          <Box p={2}>
+          <Box py={2}>
             <InputForm onClickAddTask={this.handleClickAddTask} />
           </Box>
-          <ul>
-            {todoList}
-          </ul>
+          <TodoList todoList={this.state.todoList} />
         </Container>
       </React.Fragment>
     );
