@@ -119,6 +119,13 @@ class Home extends React.Component {
       isSignined: true,
     };
     this.onClickLogout = this.props.onClickLogout;
+    this.handleClickAddTask = this.handleClickAddTask.bind(this);
+  }
+  handleClickAddTask(task) {
+    const todoList = this.state.todoList;
+    this.setState({
+      todoList: todoList.concat([task]),
+    });
   }
   render() {
     return (
@@ -132,8 +139,6 @@ class Home extends React.Component {
     );
   }
 }
-
-
 
 class App extends React.Component {
   constructor(props) {
