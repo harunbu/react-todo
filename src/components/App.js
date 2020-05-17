@@ -13,7 +13,7 @@ import Box from '@material-ui/core/Box';
 import { InputForm } from './InputForm.jsx'
 import { TodoList } from './TodoList.jsx'
 import { connect } from 'react-redux';
-import { increament } from '../actions.js';
+import { increament, endLoading } from '../actions.js';
 
 // Firebase App (the core Firebase SDK) is always required and must be listed first
 import * as firebase from "firebase/app";
@@ -90,7 +90,6 @@ class App extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        isLoading: true,
         user: null,
       };
       this.componentDidMount = this.componentDidMount.bind(this);
@@ -99,8 +98,8 @@ class App extends React.Component {
       firebase.auth().onAuthStateChanged(user => {
         this.setState({
           user: user,
-          isLoading: false,
         });
+        this.props.endLoading();
       });
       this.logout = this.logout.bind(this);
     }
@@ -109,12 +108,9 @@ class App extends React.Component {
     }
     logout() {
       firebase.auth().signOut();
-      this.setState({
-        isLoading: true,
-      });
     }
     render() {
-      if (this.state.isLoading) {
+      if (this.props.isLoading) {
         return (
           <span>ロード中...</span>
         );
@@ -144,5 +140,8 @@ class App extends React.Component {
 
 export default connect(
   state => ({isLoading: state.isLoading, value: state.value}),
-  dispatch => ({dispatchIncreament: amount => dispatch(increament(amount))}),
+  dispatch => ({
+    dispatchIncreament: amount => dispatch(increament(amount)),
+    endLoading: () => dispatch(endLoading()),
+  }),
 )(App);
