@@ -4,10 +4,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import { MenuBar } from './components/MenuBar.jsx'
 import { InputForm } from './components/InputForm.jsx'
+import { TodoList } from './components/TodoList.jsx'
 import { Toolbar } from '@material-ui/core';
 import {
   BrowserRouter as Router,
@@ -37,25 +36,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const provider = new firebase.auth.GoogleAuthProvider();
-
-function TodoList(props) {
-  const todoList = props.todoList.map((todo, index) => {
-    return (
-      <Box mb={1} key={index}>
-        <Card elevation={3}>
-          <CardContent>
-            {todo}
-          </CardContent>
-        </Card>
-      </Box>
-    );
-  });
-  return (
-    <React.Fragment>
-      {todoList}
-    </React.Fragment>
-  );
-}
 
 /**
  * ログイン画面
