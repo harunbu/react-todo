@@ -9,6 +9,13 @@ import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 import { MenuBar } from './components/MenuBar.jsx'
 import { Toolbar } from '@material-ui/core';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
 
 // Firebase App (the core Firebase SDK) is always required and must be listed first
 import * as firebase from "firebase/app";
@@ -87,14 +94,67 @@ function TodoList(props) {
   );
 }
 
-class LoginButton extends React.Component {
+/**
+ * ログイン画面
+ */
+const Login = (props) => {
+  if (props.user) {
+    props.history.push('/');
+  }
+  return <Button variant="contained" onClick={props.onClickLogin}>ログイン</Button>
+}
+
+/**
+ * ホーム画面
+ */
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    if (! props.user) {
+      props.history.push('/login');
+    }
+    this.state = {
+      user: props.user,
+      todoList: [],
+      isSignined: true,
+    };
+    this.onClickLogout = this.props.onClickLogout;
+  }
+  render() {
+    return (
+      <Container maxWidth="sm">
+        <Box py={2}>
+          <InputForm onClickAddTask={this.handleClickAddTask} />
+        </Box>
+        <TodoList todoList={this.state.todoList} />
+        <Button variant="contained" onClick={this.onClickLogout}>ログアウト</Button>
+      </Container>
+    );
+  }
+}
+
+
+
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
-      isLogin: false,
+      user: null,
     };
+    this.componentDidMount = this.componentDidMount.bind(this);
+  }
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(user => {
+      this.setState({
+        user: user,
+        isLoading: false,
+      });
+    });
     this.logout = this.logout.bind(this);
+  }
+  login() {
+    firebase.auth().signInWithRedirect(provider);
   }
   logout() {
     firebase.auth().signOut();
@@ -102,67 +162,25 @@ class LoginButton extends React.Component {
       isLoading: true,
     });
   }
-  login() {
-    firebase.auth().signInWithRedirect(provider);
-  }
-  componentDidMount () {
-    firebase.auth().onAuthStateChanged(user => {
-      this.setState({
-        isLoading: false,
-      });
-      if (user) {
-        this.setState({
-          isLogin: true,
-        });
-      } else {
-        this.setState({
-          isLogin: false,
-        });
-      }
-    });
-  }
   render() {
     if (this.state.isLoading) {
-      return <Box>ログイン状態確認中...</Box>;
+      return <span>ロード中...</span>
     }
-    if (this.state.isLogin){
-      return <Button variant="contained" onClick={this.logout}>ログアウト</Button>;
-    }
-    return <Button variant="contained" onClick={this.login}>ログイン</Button>;
-  }
-}
-
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      todoList: [],
-    };
-    this.handleClickAddTask = this.handleClickAddTask.bind(this);
-  }
-  handleClickAddTask(task) {
-    const todoList = this.state.todoList;
-    this.setState({
-      todoList: todoList.concat([task]),
-    });
-  }
-  render() {
+    const user = this.state.user;
     return (
-      <React.Fragment>
+      <Router>
         <CssBaseline />
         {/* メニューバー */}
         <MenuBar />
         <Toolbar />
 
-        {/* ToDoList */}
-        <Container maxWidth="sm">
-          <Box py={2}>
-            <InputForm onClickAddTask={this.handleClickAddTask} />
-          </Box>
-          <TodoList todoList={this.state.todoList} />
-        </Container>
-        <LoginButton />
-      </React.Fragment>
+        <Switch>
+          {/* ログイン画面 */}
+          <Route path="/login" render={(props) => <Login onClickLogin={this.login} user={user} {...props} />} />
+          {/* ホーム画面 */}
+          <Route path="/"      render={(props) => <Home onClickLogout={this.logout} user={user} {...props} />} />
+        </Switch>
+      </Router>
     );
   }
 }
