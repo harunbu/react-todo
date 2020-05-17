@@ -13,8 +13,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  Redirect,
 } from "react-router-dom";
 
 // Firebase App (the core Firebase SDK) is always required and must be listed first
@@ -38,7 +36,7 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-var provider = new firebase.auth.GoogleAuthProvider();
+const provider = new firebase.auth.GoogleAuthProvider();
 
 class InputForm extends React.Component {
   constructor(props) {
