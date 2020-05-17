@@ -6,8 +6,8 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import TextField from '@material-ui/core/TextField';
 import { MenuBar } from './components/MenuBar.jsx'
+import { InputForm } from './components/InputForm.jsx'
 import { Toolbar } from '@material-ui/core';
 import {
   BrowserRouter as Router,
@@ -37,41 +37,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const provider = new firebase.auth.GoogleAuthProvider();
-
-class InputForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: '',
-    };
-    this.handleClick = this.handleClick.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-  }
-  handleClick() {
-    this.props.onClickAddTask(this.state.value);
-    this.setState({value:''});
-  }
-  handleChange(event) {
-    this.setState({value:event.target.value});
-  }
-  render() {
-    return (
-      <Card elevation={3}>
-        <CardContent>
-          <Box display="flex" alignItems="center">
-            <Box gbcolor="gray.300" flexGrow={1}>
-              <TextField fullWidth id="standard-basic" label="タスクの内容を入力"
-                value={this.state.value}
-                onChange={this.handleChange}
-              />
-            </Box>
-            <Button variant="contained" onClick={this.handleClick}>タスク追加</Button>
-          </Box>
-        </CardContent>
-      </Card>
-    );
-  }
-}
 
 function TodoList(props) {
   const todoList = props.todoList.map((todo, index) => {
