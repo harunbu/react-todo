@@ -3,11 +3,12 @@
  */
 
 import React from 'react';
+import { Redirect } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 
 const Login = (props) => {
   if (props.user) {
-    props.history.push('/');
+    return <Redirect to="/"></Redirect>
   }
   return <Button variant="contained" onClick={props.onClickLogin}>ログイン</Button>
 }

@@ -46,7 +46,6 @@ class App extends React.Component {
     this.props.addTask(task);
   }
   render() {
-    console.log('App rendered');
     if (this.props.isLoading) {
       return (
         <span>ロード中...</span>
@@ -64,7 +63,7 @@ class App extends React.Component {
             {/* ログイン画面 */}
             <Route path="/login" render={(props) => <Login onClickLogin={this.login} user={user} {...props} />} />
             {/* ホーム画面 */}
-            <Route path="/"      render={(props) => <Home onClickLogout={this.logout} user={user} addTask={this.addTask} {...props} />} />
+            <Route path="/"      render={(props) => <Home onClickLogout={this.logout} user={user} {...props} />} />
           </Switch>
         </Router>
         <Button onClick={() => this.props.dispatchIncreament(1)}>カウントアップ</Button>
@@ -84,6 +83,5 @@ export default connect(
     dispatchIncreament: amount => dispatch(actions.increament(amount)),
     endLoading: () => dispatch(actions.endLoading()),
     setUser: (user) => dispatch(actions.setUser(user)),
-    addTask: task => dispatch(actions.addTask(task)),
   }),
 )(App);

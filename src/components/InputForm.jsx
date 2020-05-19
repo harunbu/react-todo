@@ -1,11 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import * as actions from '../actions.js';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-export default class InputForm extends React.Component {
+class InputForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,7 +17,7 @@ export default class InputForm extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
   handleClick() {
-    this.props.onClickAddTask(this.state.value);
+    this.props.addTask(this.state.value);
     this.setState({value:''});
   }
   handleChange(event) {
@@ -39,3 +41,10 @@ export default class InputForm extends React.Component {
     );
   }
 }
+
+export default connect(
+  null,
+  dispatch => ({
+    addTask: task => dispatch(actions.addTask(task)),
+  })
+)(InputForm);
