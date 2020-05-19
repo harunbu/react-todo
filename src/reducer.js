@@ -4,6 +4,7 @@ const defaultState = {
   isLoading: true,
   value: 0,
   user: null,
+  todoList: [],
 };
 
 export default (state = defaultState, action) => {
@@ -16,6 +17,8 @@ export default (state = defaultState, action) => {
       return Object.assign({}, state, {value: parseInt(state.value) + parseInt(action.value)});
     case actions.SET_USER:
       return Object.assign({}, state, {user: action.user});
+    case actions.ADD_TASK:
+      return Object.assign({}, state, {todoList: state.todoList.concat([action.task])});
     default:
       return state;
   }
