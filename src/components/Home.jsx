@@ -14,9 +14,7 @@ class Home extends React.Component {
     super(props);
     this.state = {
       todoList: [],
-      isSignined: true,
     };
-    this.onClickLogout = this.props.onClickLogout;
     this.handleClickAddTask = this.handleClickAddTask.bind(this);
   }
   handleClickAddTask(task) {
@@ -38,7 +36,7 @@ class Home extends React.Component {
           <InputForm onClickAddTask={this.handleClickAddTask} />
         </Box>
         <TodoList todoList={this.state.todoList} />
-        <Button variant="contained" onClick={this.onClickLogout}>ログアウト</Button>
+        <Button variant="contained" onClick={this.props.onClickLogout}>ログアウト</Button>
       </Container>
     );
   }

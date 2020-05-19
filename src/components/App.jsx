@@ -17,7 +17,7 @@ import MenuBar from './MenuBar.jsx'
 
 //redux関係
 import { connect } from 'react-redux';
-import { increament, endLoading, setUser } from '../actions.js';
+import * as actions from '../actions.js';
 
 //firebase関連
 import * as firebase from 'firebase/app';
@@ -79,8 +79,8 @@ export default connect(
     user: state.user
   }),
   dispatch => ({
-    dispatchIncreament: amount => dispatch(increament(amount)),
-    endLoading: () => dispatch(endLoading()),
-    setUser: (user) => dispatch(setUser(user)),
+    dispatchIncreament: amount => dispatch(actions.increament(amount)),
+    endLoading: () => dispatch(actions.endLoading()),
+    setUser: (user) => dispatch(actions.setUser(user)),
   }),
 )(App);
