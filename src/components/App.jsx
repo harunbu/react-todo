@@ -19,75 +19,58 @@ import MenuBar from './MenuBar.jsx'
 import { connect } from 'react-redux';
 import { increament, endLoading, setUser } from '../actions.js';
 
-//Firebase関係
-import * as firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCH10tVePTIfywA_EdwiZnyJEM3gWaP8D8",
-  authDomain: "harunbu-dev.firebaseapp.com",
-  databaseURL: "https://harunbu-dev.firebaseio.com",
-  projectId: "harunbu-dev",
-  storageBucket: "harunbu-dev.appspot.com",
-  messagingSenderId: "567756684294",
-  appId: "1:567756684294:web:0c6f298e05203f33755787",
-  measurementId: "G-1S4ENHLTEX"
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
-const provider = new firebase.auth.GoogleAuthProvider();
+//firebase関連
+import * as firebase from 'firebase/app';
+import { provider } from '../firebase.jsx';
 
 class App extends React.Component {
-    constructor(props) {
-      super(props);
-      this.componentDidMount = this.componentDidMount.bind(this);
-      this.logout = this.logout.bind(this);
-    }
-    componentDidMount() {
-      firebase.auth().onAuthStateChanged(user => {
-        this.props.setUser(user);
-        this.props.endLoading();
-      });
-    }
-    login() {
-      firebase.auth().signInWithRedirect(provider);
-    }
-    logout() {
-      firebase.auth().signOut().then(() => {
-        console.log(this.props);
-      });
-    }
-    render() {
-      console.log('App rendered');
-      if (this.props.isLoading) {
-        return (
-          <span>ロード中...</span>
-        );
-      }
-      const user = this.props.user;
+  constructor(props) {
+    super(props);
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.logout = this.logout.bind(this);
+  }
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(user => {
+      this.props.setUser(user);
+      this.props.endLoading();
+    });
+  }
+  login() {
+    firebase.auth().signInWithRedirect(provider);
+  }
+  logout() {
+    firebase.auth().signOut().then(() => {
+      console.log(this.props);
+    });
+  }
+  render() {
+    console.log('App rendered');
+    if (this.props.isLoading) {
       return (
-        <React.Fragment>
-          <Router>
-            <CssBaseline />
-            {/* メニューバー */}
-            <MenuBar />
-
-            <Switch>
-              {/* ログイン画面 */}
-              <Route path="/login" render={(props) => <Login onClickLogin={this.login} user={user} {...props} />} />
-              {/* ホーム画面 */}
-              <Route path="/"      render={(props) => <Home onClickLogout={this.logout} user={user} {...props} />} />
-            </Switch>
-          </Router>
-          <Button onClick={() => this.props.dispatchIncreament(1)}>カウントアップ</Button>
-          <Box>{this.props.value}</Box>
-        </React.Fragment>
+        <span>ロード中...</span>
       );
     }
+    const user = this.props.user;
+    return (
+      <React.Fragment>
+        <Router>
+          <CssBaseline />
+          {/* メニューバー */}
+          <MenuBar />
+
+          <Switch>
+            {/* ログイン画面 */}
+            <Route path="/login" render={(props) => <Login onClickLogin={this.login} user={user} {...props} />} />
+            {/* ホーム画面 */}
+            <Route path="/"      render={(props) => <Home onClickLogout={this.logout} user={user} {...props} />} />
+          </Switch>
+        </Router>
+        <Button onClick={() => this.props.dispatchIncreament(1)}>カウントアップ</Button>
+        <Box>{this.props.value}</Box>
+      </React.Fragment>
+    );
   }
+}
 
 export default connect(
   state => ({
