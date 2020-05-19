@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function MenuBar(props) {
+export default function MenuBar(props) {
   const classes = useStyles();
   return (
     <Box className={classes.root}>
@@ -32,6 +32,7 @@ export function MenuBar(props) {
         </Toolbar>
         </Container>
       </AppBar>
+      <Toolbar />
     </Box>
   );
 }

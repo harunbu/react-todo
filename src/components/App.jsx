@@ -1,24 +1,26 @@
 import React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
 } from "react-router-dom";
-import { MenuBar } from './MenuBar.jsx'
-import { Toolbar } from '@material-ui/core';
-import Container from '@material-ui/core/Container';
+
+//MaterilUI
+import CssBaseline from '@material-ui/core/CssBaseline';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
-import { InputForm } from './InputForm.jsx'
-import { TodoList } from './TodoList.jsx'
+
+//自前コンポーネント
+import Login from './Login.jsx';
+import Home from './Home.jsx';
+import MenuBar from './MenuBar.jsx'
+
+//redux関係
 import { connect } from 'react-redux';
 import { increament, endLoading, setUser } from '../actions.js';
 
-// Firebase App (the core Firebase SDK) is always required and must be listed first
+//Firebase関係
 import * as firebase from "firebase/app";
-
-// Add the Firebase products that you want to use
 import "firebase/auth";
 import "firebase/firestore";
 
@@ -38,68 +40,17 @@ firebase.initializeApp(firebaseConfig);
 
 const provider = new firebase.auth.GoogleAuthProvider();
 
-
-
-/**
- * ログイン画面
- */
-const Login = (props) => {
-  console.log('Login rendered');
-  if (props.user) {
-    props.history.push('/');
-  }
-  return <Button variant="contained" onClick={props.onClickLogin}>ログイン</Button>
-}
-
-/**
- * ホーム画面
- */
-class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      todoList: [],
-      isSignined: true,
-    };
-    this.onClickLogout = this.props.onClickLogout;
-    this.handleClickAddTask = this.handleClickAddTask.bind(this);
-  }
-  handleClickAddTask(task) {
-    const todoList = this.state.todoList;
-    this.setState({
-      todoList: todoList.concat([task]),
-    });
-  }
-  componentDidUpdate() {
-    if (! this.props.user) {
-      this.props.history.push('/login');
-    }
-  }
-  render() {
-    console.log('Home rendered');
-    return (
-      <Container maxWidth="sm">
-        <Box py={2}>
-          <InputForm onClickAddTask={this.handleClickAddTask} />
-        </Box>
-        <TodoList todoList={this.state.todoList} />
-        <Button variant="contained" onClick={this.onClickLogout}>ログアウト</Button>
-      </Container>
-    );
-  }
-}
-
 class App extends React.Component {
     constructor(props) {
       super(props);
       this.componentDidMount = this.componentDidMount.bind(this);
+      this.logout = this.logout.bind(this);
     }
     componentDidMount() {
       firebase.auth().onAuthStateChanged(user => {
         this.props.setUser(user);
         this.props.endLoading();
       });
-      this.logout = this.logout.bind(this);
     }
     login() {
       firebase.auth().signInWithRedirect(provider);
@@ -123,7 +74,6 @@ class App extends React.Component {
             <CssBaseline />
             {/* メニューバー */}
             <MenuBar />
-            <Toolbar />
 
             <Switch>
               {/* ログイン画面 */}

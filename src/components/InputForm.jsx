@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-export class InputForm extends React.Component {
+export default class InputForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
