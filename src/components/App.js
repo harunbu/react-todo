@@ -6,14 +6,14 @@ import {
   Route,
 } from "react-router-dom";
 import { MenuBar } from './MenuBar.jsx'
-import { Toolbar, Card } from '@material-ui/core';
+import { Toolbar } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import { InputForm } from './InputForm.jsx'
 import { TodoList } from './TodoList.jsx'
 import { connect } from 'react-redux';
-import { increament, endLoading } from '../actions.js';
+import { increament, endLoading, setUser } from '../actions.js';
 
 // Firebase App (the core Firebase SDK) is always required and must be listed first
 import * as firebase from "firebase/app";
@@ -44,6 +44,7 @@ const provider = new firebase.auth.GoogleAuthProvider();
  * ログイン画面
  */
 const Login = (props) => {
+  console.log('Login rendered');
   if (props.user) {
     props.history.push('/');
   }
@@ -56,11 +57,7 @@ const Login = (props) => {
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    if (! props.user) {
-      props.history.push('/login');
-    }
     this.state = {
-      user: props.user,
       todoList: [],
       isSignined: true,
     };
@@ -73,7 +70,13 @@ class Home extends React.Component {
       todoList: todoList.concat([task]),
     });
   }
+  componentDidUpdate() {
+    if (! this.props.user) {
+      this.props.history.push('/login');
+    }
+  }
   render() {
+    console.log('Home rendered');
     return (
       <Container maxWidth="sm">
         <Box py={2}>
@@ -89,16 +92,11 @@ class Home extends React.Component {
 class App extends React.Component {
     constructor(props) {
       super(props);
-      this.state = {
-        user: null,
-      };
       this.componentDidMount = this.componentDidMount.bind(this);
     }
     componentDidMount() {
       firebase.auth().onAuthStateChanged(user => {
-        this.setState({
-          user: user,
-        });
+        this.props.setUser(user);
         this.props.endLoading();
       });
       this.logout = this.logout.bind(this);
@@ -107,15 +105,18 @@ class App extends React.Component {
       firebase.auth().signInWithRedirect(provider);
     }
     logout() {
-      firebase.auth().signOut();
+      firebase.auth().signOut().then(() => {
+        console.log(this.props);
+      });
     }
     render() {
+      console.log('App rendered');
       if (this.props.isLoading) {
         return (
           <span>ロード中...</span>
         );
       }
-      const user = this.state.user;
+      const user = this.props.user;
       return (
         <React.Fragment>
           <Router>
@@ -139,9 +140,14 @@ class App extends React.Component {
   }
 
 export default connect(
-  state => ({isLoading: state.isLoading, value: state.value}),
+  state => ({
+    isLoading: state.isLoading,
+    value: state.value,
+    user: state.user
+  }),
   dispatch => ({
     dispatchIncreament: amount => dispatch(increament(amount)),
     endLoading: () => dispatch(endLoading()),
+    setUser: (user) => dispatch(setUser(user)),
   }),
 )(App);

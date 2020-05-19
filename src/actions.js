@@ -9,3 +9,7 @@ export const endLoading = () => ({type: END_LOADING});
 //デバッグ用：カウントアップ
 export const INCREAMENT = '@@react-todo/INCREAMENT';
 export const increament = (value) => ({type: INCREAMENT, value: value});
+
+//ユーザーセット
+export const SET_USER = '@@react-todo/SET_USER';
+export const setUser = (user) => ({type: SET_USER, user: user});

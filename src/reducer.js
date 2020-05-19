@@ -1,8 +1,9 @@
-import { START_LOADONG, END_LOADING, INCREAMENT } from './actions';
+import { START_LOADONG, END_LOADING, INCREAMENT, SET_USER } from './actions';
 
 const defaultState = {
   isLoading: true,
   value: 0,
+  user: null,
 };
 
 export default (state = defaultState, action) => {
@@ -13,6 +14,8 @@ export default (state = defaultState, action) => {
       return Object.assign({}, state, {isLoading: false});
     case INCREAMENT:
       return Object.assign({}, state, {value: parseInt(state.value) + parseInt(action.value)});
+    case SET_USER:
+      return Object.assign({}, state, {user: action.user});
     default:
       return state;
   }
