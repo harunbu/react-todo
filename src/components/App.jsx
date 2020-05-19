@@ -53,22 +53,18 @@ class App extends React.Component {
     }
     const user = this.props.user;
     return (
-      <React.Fragment>
-        <Router>
-          <CssBaseline />
-          {/* メニューバー */}
-          <MenuBar />
+      <Router>
+        <CssBaseline />
+        {/* メニューバー */}
+        <MenuBar />
 
-          <Switch>
-            {/* ログイン画面 */}
-            <Route path="/login" render={(props) => <Login onClickLogin={this.login} user={user} {...props} />} />
-            {/* ホーム画面 */}
-            <Route path="/"      render={(props) => <Home onClickLogout={this.logout} user={user} {...props} />} />
-          </Switch>
-        </Router>
-        <Button onClick={() => this.props.dispatchIncreament(1)}>カウントアップ</Button>
-        <Box>{this.props.value}</Box>
-      </React.Fragment>
+        <Switch>
+          {/* ログイン画面 */}
+          <Route path="/login" render={(props) => <Login onClickLogin={this.login} user={user} {...props} />} />
+          {/* ホーム画面 */}
+          <Route path="/"      render={(props) => <Home onClickLogout={this.logout} user={user} {...props} />} />
+        </Switch>
+      </Router>
     );
   }
 }
@@ -80,7 +76,6 @@ export default connect(
     user: state.user
   }),
   dispatch => ({
-    dispatchIncreament: amount => dispatch(actions.increament(amount)),
     endLoading: () => dispatch(actions.endLoading()),
     setUser: (user) => dispatch(actions.setUser(user)),
   }),
