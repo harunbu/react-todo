@@ -11,16 +11,8 @@ import TodoList from './TodoList.jsx';
 
 //redux関係
 import { connect } from 'react-redux';
-import * as actions from '../actions.js';
 
 class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleClickAddTask = this.handleClickAddTask.bind(this);
-  }
-  handleClickAddTask(task) {
-    this.props.addTask(task);
-  }
   componentDidUpdate() {
     if (! this.props.user) {
       this.props.history.push('/login');
@@ -30,7 +22,7 @@ class Home extends React.Component {
     return (
       <Container maxWidth="sm">
         <Box py={2}>
-          <InputForm onClickAddTask={this.handleClickAddTask} />
+          <InputForm onClickAddTask={this.props.addTask} />
         </Box>
         <TodoList todoList={this.props.todoList} />
         <Button variant="contained" onClick={this.props.onClickLogout}>ログアウト</Button>
@@ -41,5 +33,5 @@ class Home extends React.Component {
 
 export default connect(
   state => ({todoList: state.todoList}),
-  dispatch => ({addTask: task => dispatch(actions.addTask(task))})
+  null
 )(Home);

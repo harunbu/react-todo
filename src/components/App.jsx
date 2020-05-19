@@ -28,6 +28,7 @@ class App extends React.Component {
     super(props);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.logout = this.logout.bind(this);
+    this.addTask = this.addTask.bind(this);
   }
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
@@ -39,9 +40,10 @@ class App extends React.Component {
     firebase.auth().signInWithRedirect(provider);
   }
   logout() {
-    firebase.auth().signOut().then(() => {
-      console.log(this.props);
-    });
+    firebase.auth().signOut();
+  }
+  addTask(task) {
+    this.props.addTask(task);
   }
   render() {
     console.log('App rendered');
@@ -62,7 +64,7 @@ class App extends React.Component {
             {/* ログイン画面 */}
             <Route path="/login" render={(props) => <Login onClickLogin={this.login} user={user} {...props} />} />
             {/* ホーム画面 */}
-            <Route path="/"      render={(props) => <Home onClickLogout={this.logout} user={user} {...props} />} />
+            <Route path="/"      render={(props) => <Home onClickLogout={this.logout} user={user} addTask={this.addTask} {...props} />} />
           </Switch>
         </Router>
         <Button onClick={() => this.props.dispatchIncreament(1)}>カウントアップ</Button>
@@ -82,5 +84,6 @@ export default connect(
     dispatchIncreament: amount => dispatch(actions.increament(amount)),
     endLoading: () => dispatch(actions.endLoading()),
     setUser: (user) => dispatch(actions.setUser(user)),
+    addTask: task => dispatch(actions.addTask(task)),
   }),
 )(App);
