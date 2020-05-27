@@ -37,13 +37,11 @@ export function addTask(userId, task) {
 
 export function getTask(userId, callBack) {
   var colRef = db.collection('users').doc(userId).collection('tasks');
-  colRef.get().then(function(querySnapshot) {
+  colRef.onSnapshot((querySnapshot) => {
     let docs = [];
     querySnapshot.forEach(function(doc) {
       docs.push(doc.data());
     });
     callBack(docs);
-  }).catch(function(error) {
-    console.log("Error getting document:", error);
-  });
+  })
 }

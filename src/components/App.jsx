@@ -30,11 +30,14 @@ class App extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       this.props.setUser(user);
-      getTask(user.uid, (docs) => {
-        console.log(docs);
-        this.props.initTasks(docs);
+      if (user) {
+        getTask(user.uid, (docs) => {
+          this.props.initTasks(docs);
+          this.props.endLoading();
+        });
+      } else {
         this.props.endLoading();
-      });
+      }
     });
   }
   login() {
