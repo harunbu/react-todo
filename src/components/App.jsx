@@ -7,8 +7,6 @@ import {
 
 //MaterilUI
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
 
 //自前コンポーネント
 import Login from './Login.jsx';
@@ -21,19 +19,22 @@ import * as actions from '../actions.js';
 
 //firebase関連
 import * as firebase from 'firebase/app';
-import { provider } from '../firebase.jsx';
+import { provider, getTask } from '../firebase.jsx';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.logout = this.logout.bind(this);
-    this.addTask = this.addTask.bind(this);
   }
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       this.props.setUser(user);
-      this.props.endLoading();
+      getTask(user.uid, (docs) => {
+        console.log(docs);
+        this.props.initTasks(docs);
+        this.props.endLoading();
+      });
     });
   }
   login() {
@@ -41,9 +42,6 @@ class App extends React.Component {
   }
   logout() {
     firebase.auth().signOut();
-  }
-  addTask(task) {
-    this.props.addTask(task);
   }
   render() {
     if (this.props.isLoading) {
@@ -78,5 +76,6 @@ export default connect(
   dispatch => ({
     endLoading: () => dispatch(actions.endLoading()),
     setUser: (user) => dispatch(actions.setUser(user)),
+    initTasks: (tasks) => dispatch(actions.initTasks(tasks)),
   }),
 )(App);

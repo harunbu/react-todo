@@ -14,7 +14,7 @@ export default function TodoList(props) {
     <Box mb={1} key={index}>
       <Card elevation={3}>
         <CardContent>
-            {todo}
+            {todo.value}
         </CardContent>
       </Card>
     </Box>

@@ -19,4 +19,31 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
+const db = firebase.firestore();
+
 export const provider = new firebase.auth.GoogleAuthProvider();
+
+export function addTask(userId, task) {
+  db.collection('users').doc(userId).collection('tasks').add({
+    value: task,
+  })
+  .then(function(docRef) {
+      console.log("Document written with ID: ", docRef.id);
+  })
+  .catch(function(error) {
+      console.error("Error adding document: ", error);
+  });
+}
+
+export function getTask(userId, callBack) {
+  var colRef = db.collection('users').doc(userId).collection('tasks');
+  colRef.get().then(function(querySnapshot) {
+    let docs = [];
+    querySnapshot.forEach(function(doc) {
+      docs.push(doc.data());
+    });
+    callBack(docs);
+  }).catch(function(error) {
+    console.log("Error getting document:", error);
+  });
+}

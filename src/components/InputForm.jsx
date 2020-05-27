@@ -7,6 +7,8 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
+import { addTask } from '../firebase.jsx';
+
 class InputForm extends React.Component {
   constructor(props) {
     super(props);
@@ -17,7 +19,7 @@ class InputForm extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
   handleClick() {
-    this.props.addTask(this.state.value);
+    addTask(this.props.user.uid, this.state.value);
     this.setState({value:''});
   }
   handleChange(event) {
@@ -43,7 +45,9 @@ class InputForm extends React.Component {
 }
 
 export default connect(
-  null,
+  state => ({
+    user: state.user
+  }),
   dispatch => ({
     addTask: task => dispatch(actions.addTask(task)),
   })
