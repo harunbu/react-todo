@@ -26,6 +26,7 @@ export const provider = new firebase.auth.GoogleAuthProvider();
 export function addTask(userId, task) {
   db.collection('users').doc(userId).collection('tasks').add({
     value: task,
+    created: firebase.firestore.Timestamp.fromDate(new Date()),
   })
   .then(function(docRef) {
       console.log("Document written with ID: ", docRef.id);
@@ -36,7 +37,7 @@ export function addTask(userId, task) {
 }
 
 export function getTask(userId, callBack) {
-  var colRef = db.collection('users').doc(userId).collection('tasks');
+  var colRef = db.collection('users').doc(userId).collection('tasks').orderBy('created');
   colRef.onSnapshot((querySnapshot) => {
     let docs = [];
     querySnapshot.forEach(function(doc) {
