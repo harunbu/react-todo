@@ -36,12 +36,23 @@ export function addTask(userId, task) {
   });
 }
 
+export function deleteTask(userId, taskId) {
+  console.log('delete start. ' . taskId);
+  db.collection('users').doc(userId).collection('tasks').doc(taskId).delete().then(() => {
+    console.log('delete success. ' . taskId);
+  }).catch(() => {
+    console.log('delete failure. ' . taskId);
+  });
+}
+
 export function getTask(userId, callBack) {
   var colRef = db.collection('users').doc(userId).collection('tasks').orderBy('created');
   colRef.onSnapshot((querySnapshot) => {
     let docs = [];
     querySnapshot.forEach(function(doc) {
-      docs.push(doc.data());
+      docs.push(Object.assign(doc.data(), {
+        id: doc.id,
+      }));
     });
     callBack(docs);
   })

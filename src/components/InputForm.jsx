@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../actions.js';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Box from '@material-ui/core/Box';
@@ -49,6 +48,5 @@ export default connect(
     user: state.user
   }),
   dispatch => ({
-    addTask: task => dispatch(actions.addTask(task)),
   })
 )(InputForm);

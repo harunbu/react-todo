@@ -12,10 +12,7 @@ export default (state = defaultState, action) => {
       return Object.assign({}, state, {isLoading: false});
     case actions.SET_USER:
       return Object.assign({}, state, {user: action.user});
-    case actions.ADD_TASK:
-      return Object.assign({}, state, {todoList: state.todoList.concat([{value: action.task}])});
     case actions.INIT_TASKS:
-      console.log(action);
       return Object.assign({}, state, {todoList: action.tasks})
     default:
       return state;
