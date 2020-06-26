@@ -19,8 +19,8 @@ import { connect } from 'react-redux';
 import * as actions from '../actions.js';
 
 //firebase関連
-import * as firebase from 'firebase/app';
-import { provider, getTask, unsubscribe } from '../firebase.jsx';
+import * as auth from '../auth';
+import { getTask, unsubscribe } from '../firebase.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class App extends React.Component {
     this.changeMode = this.changeMode.bind(this);
   }
   componentDidMount() {
-    firebase.auth().onAuthStateChanged(user => {
+    auth.onAuthStateChanged(user => {
       this.props.setUser(user);
       if (user) {
         getTask(user.uid, 'main').then((docs) => {
@@ -43,11 +43,11 @@ class App extends React.Component {
     });
   }
   login() {
-    firebase.auth().signInWithRedirect(provider);
+    auth.signIn();
   }
   logout() {
     unsubscribe();
-    firebase.auth().signOut();
+    auth.signOut();
   }
   changeMode() {
     const nextMode = this.props.mode === 'main' ? 'archived' : 'main';

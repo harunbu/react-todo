@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AuthButton(props) {
-  console.log(props.user);
   if (props.user) {
     return <Button color="inherit" onClick={props.logout}>ログアウト</Button>
   }
