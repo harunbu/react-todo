@@ -61,20 +61,25 @@ export function deleteTask(userId, taskId) {
 let unsubscribeFunction = null;
 let onSnapshotHandler = null;
 
+/**
+ * タスクリストのデータが更新された際のコールバックを指定する
+ * @param callback 
+ */
 export function onSnapshot(callback) {
   onSnapshotHandler = callback;
 }
 
 /**
- * 全タスクを取得する
- * ※このメソッドは一度だけ呼ばれる。読み込み後は自動的に同期される
+ * タスクリストを購読する
  * @param userId 
- * @param mode
+ * @param list
  */
-export function getTask(userId, mode) {
-  var colRef = db.collection('users').doc(userId).collection('tasks').where('list', '==', mode).orderBy('created_at');
+export function subscribe(userId, list) {
+  var colRef = db.collection('users').doc(userId).collection('tasks').where('list', '==', list).orderBy('created_at');
+  //すでに別の購読をしていた場合は解除する
   if (unsubscribeFunction) {
     unsubscribeFunction();
+    unsubscribeFunction = null;
   }
   return new Promise((resolve, reject) => {
     unsubscribeFunction = colRef.onSnapshot((querySnapshot) => {
@@ -96,5 +101,6 @@ export function getTask(userId, mode) {
 export function unsubscribe() {
   if (unsubscribeFunction) {
     unsubscribeFunction();
+    unsubscribeFunction = null;
   }
 }

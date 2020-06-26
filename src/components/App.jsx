@@ -35,7 +35,7 @@ class App extends React.Component {
       if (user) {
         //タスクリストをfirestoreと同期させる（購読する）
         firebase.onSnapshot(this.props.updateTasks);
-        firebase.getTask(user.uid, 'main').then(() => this.props.endLoading());
+        firebase.subscribe(user.uid, 'main').then(() => this.props.endLoading());
       } else {
         this.props.endLoading();
       }
@@ -52,7 +52,7 @@ class App extends React.Component {
     const nextMode = this.props.mode === 'main' ? 'archived' : 'main';
     this.props.changeMode(nextMode);
     
-    firebase.getTask(this.props.user.uid, nextMode);
+    firebase.subscribe(this.props.user.uid, nextMode);
   }
   render() {
     if (this.props.isLoading) {
