@@ -6,7 +6,7 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import { addTask } from '../firebase.jsx';
+import * as firebase from '../firebase.jsx';
 
 class InputForm extends React.Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class InputForm extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
   handleClick() {
-    addTask(this.props.user.uid, this.state.value);
+    firebase.addTask(this.props.user.uid, this.state.value);
     this.setState({value:''});
   }
   handleChange(event) {
@@ -26,19 +26,21 @@ class InputForm extends React.Component {
   }
   render() {
     return (
-      <Card elevation={3}>
-        <CardContent>
-          <Box display="flex" alignItems="center">
-            <Box gbcolor="gray.300" flexGrow={1}>
-              <TextField fullWidth id="standard-basic" label="タスクの内容を入力"
-                value={this.state.value}
-                onChange={this.handleChange}
-              />
+      <Box mb={3}>
+        <Card elevation={3}>
+          <CardContent>
+            <Box display="flex" alignItems="center">
+              <Box gbcolor="gray.300" flexGrow={1}>
+                <TextField fullWidth id="standard-basic" label="タスクの内容を入力"
+                  value={this.state.value}
+                  onChange={this.handleChange}
+                />
+              </Box>
+              <Button variant="contained" onClick={this.handleClick}>タスク追加</Button>
             </Box>
-            <Button variant="contained" onClick={this.handleClick}>タスク追加</Button>
-          </Box>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </Box>
     );
   }
 }
@@ -46,7 +48,5 @@ class InputForm extends React.Component {
 export default connect(
   state => ({
     user: state.user
-  }),
-  dispatch => ({
   })
 )(InputForm);
