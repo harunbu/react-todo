@@ -58,7 +58,7 @@ export function deleteTask(userId, taskId) {
   });
 }
 
-let unsubscrive = null;
+let unsubscribeFunction = null;
 
 /**
  * 全タスクを取得する
@@ -68,10 +68,10 @@ let unsubscrive = null;
  */
 export function getTask(userId, mode, callBack) {
   var colRef = db.collection('users').doc(userId).collection('tasks').where('list', '==', mode).orderBy('created_at');
-  if (unsubscrive) {
-    unsubscrive();
+  if (unsubscribeFunction) {
+    unsubscribeFunction();
   }
-  unsubscrive = colRef.onSnapshot((querySnapshot) => {
+  unsubscribeFunction = colRef.onSnapshot((querySnapshot) => {
     let docs = [];
     querySnapshot.forEach(function(doc) {
       docs.push(Object.assign(doc.data(), {
@@ -80,4 +80,13 @@ export function getTask(userId, mode, callBack) {
     });
     callBack(docs);
   })
+}
+
+/**
+ * タスクリストのサブスクライブを解除する
+ */
+export function unsubscribe() {
+  if (unsubscribeFunction) {
+    unsubscribeFunction();
+  }
 }

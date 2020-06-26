@@ -19,7 +19,7 @@ import * as actions from '../actions.js';
 
 //firebase関連
 import * as firebase from 'firebase/app';
-import { provider, getTask } from '../firebase.jsx';
+import { provider, getTask, unsubscribe } from '../firebase.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -45,6 +45,7 @@ class App extends React.Component {
     firebase.auth().signInWithRedirect(provider);
   }
   logout() {
+    unsubscribe();
     firebase.auth().signOut();
   }
   changeMode() {
@@ -66,14 +67,14 @@ class App extends React.Component {
       <Router>
         <CssBaseline />
         {/* メニューバー */}
-        <MenuBar />
+        <MenuBar onClickLogout={this.logout} />
 
         <Switch>
           {/* ログイン画面 */}
-          <Route path="/login"    render={(props) => <Login onClickLogin={this.login} user={user} {...props} />} />
+          <Route path="/login" render={(props) => <Login onClickLogin={this.login} user={user} {...props} />} />
           {/* ホーム画面 */}
-          <Route path="/"         render={(props) => {
-            return <Home onClickLogout={this.logout} user={user} onClickChangeMode={this.changeMode} {...props} />
+          <Route path="/"      render={(props) => {
+            return <Home user={user} onClickChangeMode={this.changeMode} {...props} />
           }} />
         </Switch>
       </Router>
