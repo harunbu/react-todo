@@ -4,13 +4,15 @@
 
 import React from 'react';
 import { Redirect } from "react-router-dom";
-import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
 
-const Login = (props) => {
+export default function Login(props) {
   if (props.user) {
     return <Redirect to="/"></Redirect>
   }
-  return <Button variant="contained" onClick={props.onClickLogin}>ログイン</Button>
+  return (
+    <Container maxWidth="sm">
+      <p>ログインしてください！</p>
+    </Container>
+  );
 }
-
-export default Login;

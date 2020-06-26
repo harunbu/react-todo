@@ -7,6 +7,7 @@ import {
 
 //MaterilUI
 import CssBaseline from '@material-ui/core/CssBaseline';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 //自前コンポーネント
 import Login from './Login.jsx';
@@ -59,7 +60,10 @@ class App extends React.Component {
   render() {
     if (this.props.isLoading) {
       return (
-        <span>ロード中...</span>
+        <React.Fragment>
+          <CssBaseline />
+          <LinearProgress />
+        </React.Fragment>
       );
     }
     const user = this.props.user;
@@ -67,7 +71,7 @@ class App extends React.Component {
       <Router>
         <CssBaseline />
         {/* メニューバー */}
-        <MenuBar onClickLogout={this.logout} />
+        <MenuBar login={this.login} logout={this.logout} />
 
         <Switch>
           {/* ログイン画面 */}

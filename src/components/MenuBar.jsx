@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -19,7 +20,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuBar(props) {
+function AuthButton(props) {
+  console.log(props.user);
+  if (props.user) {
+    return <Button color="inherit" onClick={props.logout}>ログアウト</Button>
+  }
+
+  return <Button color="inherit" onClick={props.login}>ログイン</Button>
+}
+
+function MenuBar(props) {
   const classes = useStyles();
   return (
     <Box className={classes.root}>
@@ -29,7 +39,7 @@ export default function MenuBar(props) {
             <Typography variant="h6" className={classes.title}>
               Todo リスト
             </Typography>
-            <Button color="inherit" onClick={props.onClickLogout}>ログアウト</Button>
+            <AuthButton user={props.user} login={props.login} logout={props.logout} />
           </Toolbar>
         </Container>
       </AppBar>
@@ -37,3 +47,11 @@ export default function MenuBar(props) {
     </Box>
   );
 }
+
+export default connect(
+  state => ({
+    user: state.user
+  }),
+  dispatch => ({
+  })
+)(MenuBar);
