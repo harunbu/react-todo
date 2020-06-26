@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -29,16 +29,15 @@ function logout() {
 }
 
 function AuthButton(props) {
-  if (props.user) {
-    return <Button color="inherit" onClick={logout}>ログアウト</Button>
+  const user = useSelector(state => state.user);
+  if (user) {
+    return <Button color="inherit" onClick={logout}>ログアウト</Button>;
   }
 
-  return (
-    <Button color="inherit" component={Link} to="/login">ログイン</Button>
-  );
+  return <Button color="inherit" component={Link} to="/login">ログイン</Button>;
 }
 
-function MenuBar(props) {
+export default function MenuBar(props) {
   const classes = useStyles();
   return (
     <Box className={classes.root}>
@@ -48,7 +47,7 @@ function MenuBar(props) {
             <Typography variant="h6" className={classes.title}>
               Todo リスト
             </Typography>
-            <AuthButton user={props.user} logout={props.logout} />
+            <AuthButton />
           </Toolbar>
         </Container>
       </AppBar>
@@ -56,11 +55,3 @@ function MenuBar(props) {
     </Box>
   );
 }
-
-export default connect(
-  state => ({
-    user: state.user
-  }),
-  dispatch => ({
-  })
-)(MenuBar);
