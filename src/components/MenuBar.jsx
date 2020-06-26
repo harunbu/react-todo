@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -25,7 +26,9 @@ function AuthButton(props) {
     return <Button color="inherit" onClick={props.logout}>ログアウト</Button>
   }
 
-  return <Button color="inherit" onClick={props.login}>ログイン</Button>
+  return (
+    <Button color="inherit" component={Link} to="/login">ログイン</Button>
+  );
 }
 
 function MenuBar(props) {
@@ -38,7 +41,7 @@ function MenuBar(props) {
             <Typography variant="h6" className={classes.title}>
               Todo リスト
             </Typography>
-            <AuthButton user={props.user} login={props.login} logout={props.logout} />
+            <AuthButton user={props.user} logout={props.logout} />
           </Toolbar>
         </Container>
       </AppBar>

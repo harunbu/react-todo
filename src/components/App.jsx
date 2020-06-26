@@ -33,7 +33,7 @@ class App extends React.Component {
     auth.onAuthStateChanged(user => {
       this.props.setUser(user);
       if (user) {
-        //タスクリストをfirestoreと同期させる（購読する）
+        //タスクリストをfirestoreから購読する（更新を同期する）
         firebase.onSnapshot(this.props.updateTasks);
         firebase.subscribe(user.uid, 'main').then(() => this.props.endLoading());
       } else {
@@ -68,11 +68,11 @@ class App extends React.Component {
       <Router>
         <CssBaseline />
         {/* メニューバー */}
-        <MenuBar login={this.login} logout={this.logout} />
+        <MenuBar logout={this.logout} />
 
         <Switch>
           {/* ログイン画面 */}
-          <Route path="/login" render={(props) => <Login onClickLogin={this.login} user={user} {...props} />} />
+          <Route path="/login" render={(props) => <Login onClickLogin={this.login} {...props} />} />
           {/* ホーム画面 */}
           <Route path="/"      render={(props) => {
             return <Home user={user} onClickChangeMode={this.changeMode} {...props} />
