@@ -25,8 +25,8 @@ export const provider = new firebase.auth.GoogleAuthProvider();
 
 /**
  * タスクを追加する
- * @param {int} userId 
- * @param {object} task 
+ * @param userId 
+ * @param task 
  */
 export function addTask(userId, task) {
   db.collection('users').doc(userId).collection('tasks').add({
@@ -45,8 +45,8 @@ export function addTask(userId, task) {
 
 /**
  * タスクを削除する（アーカイブに入れる）
- * @param {*} userId 
- * @param {*} taskId 
+ * @param userId 
+ * @param taskId 
  */
 export function deleteTask(userId, taskId) {
   db.collection('users').doc(userId).collection('tasks').doc(taskId).update({
@@ -63,23 +63,25 @@ let unsubscribeFunction = null;
 /**
  * 全タスクを取得する
  * ※このメソッドは一度だけ呼ばれる。読み込み後は自動的に同期される
- * @param {*} userId 
- * @param {*} callBack 
+ * @param userId 
+ * @param mode
  */
-export function getTask(userId, mode, callBack) {
+export function getTask(userId, mode) {
   var colRef = db.collection('users').doc(userId).collection('tasks').where('list', '==', mode).orderBy('created_at');
   if (unsubscribeFunction) {
     unsubscribeFunction();
   }
-  unsubscribeFunction = colRef.onSnapshot((querySnapshot) => {
-    let docs = [];
-    querySnapshot.forEach(function(doc) {
-      docs.push(Object.assign(doc.data(), {
-        id: doc.id,
-      }));
-    });
-    callBack(docs);
-  })
+  return new Promise((resolve, reject) => {
+    unsubscribeFunction = colRef.onSnapshot((querySnapshot) => {
+      let docs = [];
+      querySnapshot.forEach(function(doc) {
+        docs.push(Object.assign(doc.data(), {
+          id: doc.id,
+        }));
+      });
+      resolve(docs);
+    })
+  });
 }
 
 /**

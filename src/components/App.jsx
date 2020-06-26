@@ -32,7 +32,7 @@ class App extends React.Component {
     firebase.auth().onAuthStateChanged(user => {
       this.props.setUser(user);
       if (user) {
-        getTask(user.uid, 'main', (docs) => {
+        getTask(user.uid, 'main').then((docs) => {
           this.props.initTasks(docs);
           this.props.endLoading();
         });
@@ -52,7 +52,7 @@ class App extends React.Component {
     const nextMode = this.props.mode === 'main' ? 'archived' : 'main';
     this.props.changeMode(nextMode);
     
-    getTask(this.props.user.uid, nextMode, (docs) => {
+    getTask(this.props.user.uid, nextMode).then((docs) => {
       this.props.initTasks(docs);
     });
   }
