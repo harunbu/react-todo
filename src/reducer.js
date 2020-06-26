@@ -4,7 +4,7 @@ import * as actions from './actions';
 const defaultState = {
   isLoading: true,
   user: null,
-  todoList: [],
+  tasks: [],
   mode: 'main',
 };
 
@@ -15,8 +15,8 @@ export default (state = defaultState, action) => {
       return Object.assign({}, state, {isLoading: false});
     case actions.SET_USER:
       return Object.assign({}, state, {user: action.user});
-    case actions.INIT_TASKS:
-      return Object.assign({}, state, {todoList: action.tasks})
+    case actions.UPDATE_TASKS:
+      return Object.assign({}, state, {tasks: action.tasks})
     case actions.CHANGE_MODE:
       return Object.assign({}, state, {mode: action.mode})
     default:

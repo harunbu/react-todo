@@ -14,8 +14,8 @@ import { useSelector } from "react-redux";
 import { deleteTask } from '../firebase.jsx';
 
 function TodoList(props) {
-  const todoList = useSelector(state => state.todoList);
-  const todoListDom = todoList.map((todo) => {
+  const tasks = useSelector(state => state.tasks);
+  const todoListDom = tasks.map((todo) => {
     return (
     <Box mb={1} key={todo.id}>
       <Card elevation={3}>

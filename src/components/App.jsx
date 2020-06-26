@@ -34,7 +34,7 @@ class App extends React.Component {
       this.props.setUser(user);
       if (user) {
         getTask(user.uid, 'main').then((docs) => {
-          this.props.initTasks(docs);
+          this.props.updateTasks(docs);
           this.props.endLoading();
         });
       } else {
@@ -54,7 +54,7 @@ class App extends React.Component {
     this.props.changeMode(nextMode);
     
     getTask(this.props.user.uid, nextMode).then((docs) => {
-      this.props.initTasks(docs);
+      this.props.updateTasks(docs);
     });
   }
   render() {
@@ -96,7 +96,7 @@ export default connect(
   dispatch => ({
     endLoading: () => dispatch(actions.endLoading()),
     setUser: (user) => dispatch(actions.setUser(user)),
-    initTasks: (tasks) => dispatch(actions.initTasks(tasks)),
+    updateTasks: (tasks) => dispatch(actions.updateTasks(tasks)),
     changeMode: (mode) => dispatch(actions.changeMode(mode)),
   }),
 )(App);
