@@ -22,6 +22,7 @@ export default function Home(props) {
       </Box>
       <TodoList todoList={props.todoList} />
       <Button variant="contained" onClick={props.onClickLogout}>ログアウト</Button>
+      <Button variant="contained" onClick={props.onClickChangeMode}>モード切替</Button>
     </Container>
   );
 }

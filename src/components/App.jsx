@@ -11,7 +11,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 //自前コンポーネント
 import Login from './Login.jsx';
 import Home from './Home.jsx';
-import MenuBar from './MenuBar.jsx'
+import MenuBar from './MenuBar.jsx';
 
 //redux関係
 import { connect } from 'react-redux';
@@ -26,12 +26,13 @@ class App extends React.Component {
     super(props);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.logout = this.logout.bind(this);
+    this.changeMode = this.changeMode.bind(this);
   }
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       this.props.setUser(user);
       if (user) {
-        getTask(user.uid, (docs) => {
+        getTask(user.uid, 'main', (docs) => {
           this.props.initTasks(docs);
           this.props.endLoading();
         });
@@ -45,6 +46,14 @@ class App extends React.Component {
   }
   logout() {
     firebase.auth().signOut();
+  }
+  changeMode() {
+    const nextMode = this.props.mode === 'main' ? 'archived' : 'main';
+    this.props.changeMode(nextMode);
+    
+    getTask(this.props.user.uid, nextMode, (docs) => {
+      this.props.initTasks(docs);
+    });
   }
   render() {
     if (this.props.isLoading) {
@@ -61,9 +70,11 @@ class App extends React.Component {
 
         <Switch>
           {/* ログイン画面 */}
-          <Route path="/login" render={(props) => <Login onClickLogin={this.login} user={user} {...props} />} />
+          <Route path="/login"    render={(props) => <Login onClickLogin={this.login} user={user} {...props} />} />
           {/* ホーム画面 */}
-          <Route path="/"      render={(props) => <Home onClickLogout={this.logout} user={user} {...props} />} />
+          <Route path="/"         render={(props) => {
+            return <Home onClickLogout={this.logout} user={user} onClickChangeMode={this.changeMode} {...props} />
+          }} />
         </Switch>
       </Router>
     );
@@ -74,11 +85,13 @@ export default connect(
   state => ({
     isLoading: state.isLoading,
     value: state.value,
-    user: state.user
+    user: state.user,
+    mode: state.mode,
   }),
   dispatch => ({
     endLoading: () => dispatch(actions.endLoading()),
     setUser: (user) => dispatch(actions.setUser(user)),
     initTasks: (tasks) => dispatch(actions.initTasks(tasks)),
+    changeMode: (mode) => dispatch(actions.changeMode(mode)),
   }),
 )(App);
