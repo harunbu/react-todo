@@ -59,6 +59,11 @@ export function deleteTask(userId, taskId) {
 }
 
 let unsubscribeFunction = null;
+let onSnapshotHandler = null;
+
+export function onSnapshot(callback) {
+  onSnapshotHandler = callback;
+}
 
 /**
  * 全タスクを取得する
@@ -79,7 +84,8 @@ export function getTask(userId, mode) {
           id: doc.id,
         }));
       });
-      resolve(docs);
+      onSnapshotHandler && onSnapshotHandler(docs);
+      resolve();
     })
   });
 }

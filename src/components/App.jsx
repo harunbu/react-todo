@@ -20,7 +20,7 @@ import * as actions from '../actions.js';
 
 //firebase関連
 import * as auth from '../auth';
-import { getTask, unsubscribe } from '../firebase.jsx';
+import * as firebase from '../firebase.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -33,10 +33,9 @@ class App extends React.Component {
     auth.onAuthStateChanged(user => {
       this.props.setUser(user);
       if (user) {
-        getTask(user.uid, 'main').then((docs) => {
-          this.props.updateTasks(docs);
-          this.props.endLoading();
-        });
+        //タスクリストをfirestoreと同期させる（購読する）
+        firebase.onSnapshot(this.props.updateTasks);
+        firebase.getTask(user.uid, 'main').then(() => this.props.endLoading());
       } else {
         this.props.endLoading();
       }
@@ -46,16 +45,14 @@ class App extends React.Component {
     auth.signIn();
   }
   logout() {
-    unsubscribe();
+    firebase.unsubscribe();
     auth.signOut();
   }
   changeMode() {
     const nextMode = this.props.mode === 'main' ? 'archived' : 'main';
     this.props.changeMode(nextMode);
     
-    getTask(this.props.user.uid, nextMode).then((docs) => {
-      this.props.updateTasks(docs);
-    });
+    firebase.getTask(this.props.user.uid, nextMode);
   }
   render() {
     if (this.props.isLoading) {
