@@ -9,7 +9,7 @@ import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import InputForm from './InputForm.jsx';
-import TodoList from './TodoList.jsx';
+import TaskList from './TaskList.jsx';
 
 export default function Home(props) {
   if (! props.user) {
@@ -20,7 +20,7 @@ export default function Home(props) {
       <Box py={2}>
         <InputForm />
       </Box>
-      <TodoList todoList={props.todoList} />
+      <TaskList />
       <Button variant="contained" onClick={props.onClickChangeMode}>モード切替</Button>
     </Container>
   );
