@@ -8,6 +8,8 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import * as firebase from '../firebase.jsx';
+import * as auth from '../auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,9 +23,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function logout() {
+  firebase.unsubscribe();
+  auth.signOut();
+}
+
 function AuthButton(props) {
   if (props.user) {
-    return <Button color="inherit" onClick={props.logout}>ログアウト</Button>
+    return <Button color="inherit" onClick={logout}>ログアウト</Button>
   }
 
   return (

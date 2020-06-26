@@ -26,7 +26,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.componentDidMount = this.componentDidMount.bind(this);
-    this.logout = this.logout.bind(this);
     this.changeMode = this.changeMode.bind(this);
   }
   componentDidMount() {
@@ -40,13 +39,6 @@ class App extends React.Component {
         this.props.endLoading();
       }
     });
-  }
-  login() {
-    auth.signIn();
-  }
-  logout() {
-    firebase.unsubscribe();
-    auth.signOut();
   }
   changeMode() {
     const nextMode = this.props.mode === 'main' ? 'archived' : 'main';
@@ -68,11 +60,11 @@ class App extends React.Component {
       <Router>
         <CssBaseline />
         {/* メニューバー */}
-        <MenuBar logout={this.logout} />
+        <MenuBar />
 
         <Switch>
           {/* ログイン画面 */}
-          <Route path="/login" render={(props) => <Login onClickLogin={this.login} {...props} />} />
+          <Route path="/login" render={(props) => <Login {...props} />} />
           {/* ホーム画面 */}
           <Route path="/"      render={(props) => {
             return <Home user={user} onClickChangeMode={this.changeMode} {...props} />
